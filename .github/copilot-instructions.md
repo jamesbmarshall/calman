@@ -2,7 +2,7 @@
 
 ## What is calman
 
-A personal availability viewer hosted at cal.jamesbmarshall.com. It fetches a live ICS calendar feed server-side, computes free time slots within working hours, and presents them to visitors. No database — all state is derived from the ICS feed on each request.
+A personal availability viewer. It fetches a live ICS calendar feed server-side, computes free time slots within working hours, and presents them to visitors. No database — all state is derived from the ICS feed on each request.
 
 ## Running locally
 

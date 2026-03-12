@@ -2,7 +2,7 @@
 
 A personal availability viewer. Fetches a live ICS calendar feed, computes free time slots within your working hours, and presents them on a clean, shareable web page.
 
-Built for hosting at `cal.jamesbmarshall.com` but easily adaptable to any domain.
+Built for self-hosting on any domain (e.g. `cal.yourdomain.com`).
 
 ## How it works
 
@@ -59,7 +59,7 @@ This assumes you already have a VPS with **Docker**, **Docker Compose**, and **P
 SSH into your VPS and clone the repo:
 
 ```bash
-git clone https://github.com/jamesbmarshall/calman.git
+git clone https://github.com/your-username/calman.git
 cd calman
 ```
 
@@ -93,7 +93,7 @@ Calman is now running on port 3000.
 
 1. Open your Pangolin dashboard
 2. Add a new site:
-   - **Domain:** `cal.jamesbmarshall.com`
+   - **Domain:** `cal.yourdomain.com`
    - **Target:** `http://localhost:3000` (or `http://<calman-container-ip>:3000` if using Docker networks)
 3. Pangolin handles HTTPS and certificate provisioning automatically
 
@@ -105,7 +105,7 @@ In your DNS provider, add an **A record** (if you haven't already for Pangolin):
 |---|---|---|
 | A | `cal` | `<your VPS IP address>` |
 
-That's it. Visit `https://cal.jamesbmarshall.com` — it should be live.
+That's it. Visit `https://cal.yourdomain.com` — it should be live.
 
 ### Verifying it's working
 
@@ -184,7 +184,7 @@ public/index.html      Self-contained frontend (inline CSS + JS)
 
 **Site not loading / no HTTPS**
 - Check the site is configured correctly in your Pangolin dashboard
-- Make sure the DNS A record for `cal` points to your VPS IP: `dig cal.jamesbmarshall.com`
+- Make sure the DNS A record for `cal` points to your VPS IP: `dig cal.yourdomain.com`
 - Check Pangolin's logs for errors
 
 **Times look wrong**
