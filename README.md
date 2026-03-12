@@ -65,7 +65,7 @@ This assumes you already have a VPS with **Docker**, **Docker Compose**, and **P
 SSH into your VPS and clone the repo:
 
 ```bash
-git clone https://github.com/your-username/calman.git
+git clone https://github.com/jamesbmarshall/calman.git
 cd calman
 ```
 
