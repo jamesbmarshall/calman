@@ -1,0 +1,3 @@
+cal.jamesbmarshall.com {
+    reverse_proxy calman:3000
+}
