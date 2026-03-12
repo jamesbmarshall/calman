@@ -131,7 +131,7 @@ function formatDayLabel(date, offsetFromToday) {
 
   const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
   const dayNum = date.getDate();
-  const month = date.toLocaleDateString("en-GB", { month: "short" });
+  const month = date.toLocaleDateString("en-GB", { month: "long" });
   return `${dayName} ${dayNum} ${month}`;
 }
 
