@@ -26,6 +26,7 @@ docker compose up --build
 | `WORK_END` | `16:00` | Working hours end (HH:MM) |
 | `WORK_DAYS` | `1,2,3,4,5` | Working days (0=Sun … 6=Sat) |
 | `BUFFER_MINUTES` | `10` | Buffer either side of events to avoid back-to-back bookings |
+| `DISPLAY_NAME` | (empty) | Your name — personalises the page title (e.g. "Look up James's availability"). If empty, shows "Look up my availability" |
 | `PORT` | `3000` | Server listen port |
 
 ## Architecture

@@ -11,6 +11,7 @@ const config = {
   workEnd: process.env.WORK_END || "16:00",
   workDays: (process.env.WORK_DAYS || "1,2,3,4,5").split(",").map(Number),
   bufferMinutes: parseInt(process.env.BUFFER_MINUTES, 10) || 10,
+  displayName: process.env.DISPLAY_NAME || "",
 };
 
 if (!config.icsUrl) {
@@ -23,8 +24,6 @@ app.use((req, res, next) => {
   res.setHeader("X-Robots-Tag", "noindex, nofollow");
   next();
 });
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/availability", async (req, res) => {
   const duration = parseInt(req.query.duration, 10) || 30;
@@ -40,9 +39,15 @@ app.get("/api/availability", async (req, res) => {
   }
 });
 
+app.get("/api/config", (req, res) => {
+  res.json({ displayName: config.displayName });
+});
+
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.listen(PORT, () => {
   console.log(`calman listening on port ${PORT}`);

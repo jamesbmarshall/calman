@@ -9,5 +9,6 @@ services:
       - WORK_END=${WORK_END:-16:00}
       - WORK_DAYS=${WORK_DAYS:-1,2,3,4,5}
       - BUFFER_MINUTES=${BUFFER_MINUTES:-10}
+      - DISPLAY_NAME=${DISPLAY_NAME:-}
       - PORT=${PORT:-3000}
     restart: unless-stopped

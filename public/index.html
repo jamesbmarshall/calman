@@ -656,6 +656,19 @@
         }
       });
 
+      // --- Personalisation ---
+      fetch("/api/config")
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.displayName) {
+            var name = data.displayName;
+            var possessive = name.endsWith("s") ? name + "'" : name + "'s";
+            document.title = "Look up " + possessive + " availability";
+            document.querySelector("header h1").textContent = "Look up " + possessive + " availability";
+          }
+        })
+        .catch(function () {}); // non-critical, keep defaults
+
       // --- Theme toggle ---
       var toggle = document.getElementById("theme-toggle");
       function getPreferredTheme() {

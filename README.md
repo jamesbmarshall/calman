@@ -34,6 +34,7 @@ Open http://localhost:3000 in your browser.
 | `WORK_END` | No | `16:00` | End of your working hours (24h format, HH:MM) |
 | `WORK_DAYS` | No | `1,2,3,4,5` | Which days you work (0 = Sunday, 1 = Monday, ..., 6 = Saturday) |
 | `BUFFER_MINUTES` | No | `10` | Minutes of padding either side of each event — prevents back-to-back bookings |
+| `DISPLAY_NAME` | No | (empty) | Your name — personalises the page title (e.g. "Look up James's availability"). If empty, shows "Look up my availability" |
 | `PORT` | No | `3000` | Port the Node server listens on |
 
 ### Finding your ICS feed URL
