@@ -52,91 +52,58 @@ Open http://localhost:3000 in your browser.
 
 ## Deploying to your VPS
 
-### Prerequisites
+This assumes you already have a VPS with **Docker**, **Docker Compose**, and **Pangolin** configured as your reverse proxy (handling HTTPS automatically).
 
-- A VPS (any Linux server) with **Docker** and **Docker Compose** installed
-- A domain name you control (e.g. `jamesbmarshall.com`)
-- SSH access to the VPS
+### Step 1: Clone the repo on your VPS
 
-### Step 1: Point your domain to the VPS
-
-In your DNS provider (wherever you manage `jamesbmarshall.com`), add an **A record**:
-
-| Type | Host | Value |
-|---|---|---|
-| A | `cal` | `<your VPS IP address>` |
-
-This tells the internet that `cal.jamesbmarshall.com` points to your server. DNS changes can take a few minutes to propagate (sometimes up to an hour).
-
-You can check if it's working with:
-
-```bash
-dig cal.jamesbmarshall.com
-```
-
-### Step 2: Clone the repo on your VPS
-
-SSH into your VPS:
-
-```bash
-ssh your-user@your-vps-ip
-```
-
-Clone the repo:
+SSH into your VPS and clone the repo:
 
 ```bash
 git clone https://github.com/jamesbmarshall/calman.git
 cd calman
 ```
 
-### Step 3: Configure your ICS feed
+### Step 2: Configure your ICS feed
 
-Create a `.env` file in the calman directory:
+Create a `.env` file:
 
 ```bash
 nano .env
 ```
 
-Add your ICS feed URL (and optionally override any other defaults):
+Add your ICS feed URL:
 
 ```env
 ICS_URL=https://outlook.office365.com/owa/calendar/your-calendar-id/reachcalendar.ics
 ```
 
-Save and exit (`Ctrl+X`, then `Y`, then `Enter` in nano).
+Save and exit (`Ctrl+X`, then `Y`, then `Enter`).
 
 > **Important:** The `.env` file is in `.gitignore` so it won't be committed. This keeps your calendar URL private.
 
-### Step 4: Update the domain in the Caddyfile
-
-If you're using a different domain, edit `Caddyfile`:
-
-```bash
-nano Caddyfile
-```
-
-Replace `cal.jamesbmarshall.com` with your domain.
-
-### Step 5: Open firewall ports
-
-Your VPS needs ports 80 and 443 open for HTTP and HTTPS. How to do this depends on your provider:
-
-```bash
-# If using ufw (Ubuntu/Debian)
-sudo ufw allow 80
-sudo ufw allow 443
-```
-
-### Step 6: Start everything
+### Step 3: Start calman
 
 ```bash
 docker compose up -d --build
 ```
 
-This does three things:
-- Builds the calman app into a Docker container
-- Starts Caddy (the reverse proxy) which automatically gets an HTTPS certificate from Let's Encrypt
-- Runs everything in the background (`-d`)
+Calman is now running on port 3000.
+
+### Step 4: Add a site in Pangolin
+
+1. Open your Pangolin dashboard
+2. Add a new site:
+   - **Domain:** `cal.jamesbmarshall.com`
+   - **Target:** `http://localhost:3000` (or `http://<calman-container-ip>:3000` if using Docker networks)
+3. Pangolin handles HTTPS and certificate provisioning automatically
+
+### Step 5: Add DNS record
+
+In your DNS provider, add an **A record** (if you haven't already for Pangolin):
+
+| Type | Host | Value |
+|---|---|---|
+| A | `cal` | `<your VPS IP address>` |
 
 That's it. Visit `https://cal.jamesbmarshall.com` — it should be live.
 
@@ -193,9 +160,8 @@ docker compose up -d
 ## Architecture
 
 ```
-Caddyfile              Reverse proxy config (auto-HTTPS)
 Dockerfile             Container build (Node 22 Alpine)
-docker-compose.yml     Orchestrates Caddy + calman
+docker-compose.yml     Runs calman (Pangolin handles reverse proxy externally)
 server.js              Express app — routes and middleware
 src/ics.js             Fetches and parses the ICS feed
 src/availability.js    Computes free slots from busy blocks
@@ -216,10 +182,10 @@ public/index.html      Self-contained frontend (inline CSS + JS)
 - Check that your `ICS_URL` is correct and accessible from the server: `docker compose exec calman wget -qO- "$ICS_URL" | head`
 - Some ICS providers require the server's IP to not be blocked
 
-**Caddy won't start / no HTTPS**
-- Make sure ports 80 and 443 are open on your VPS firewall
-- Make sure the DNS A record is pointing to the correct IP: `dig cal.jamesbmarshall.com`
-- Check Caddy logs: `docker compose logs caddy`
+**Site not loading / no HTTPS**
+- Check the site is configured correctly in your Pangolin dashboard
+- Make sure the DNS A record for `cal` points to your VPS IP: `dig cal.jamesbmarshall.com`
+- Check Pangolin's logs for errors
 
 **Times look wrong**
 - The server computes slots in its own timezone. If your VPS is in a different timezone to you, add `TZ=Europe/London` (or your timezone) to the calman environment in `docker-compose.yml`

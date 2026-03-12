@@ -1,21 +1,8 @@
 services:
-  caddy:
-    image: caddy:2-alpine
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - calman
-    restart: unless-stopped
-
   calman:
     build: .
-    expose:
-      - "3000"
+    ports:
+      - "3000:3000"
     environment:
       - ICS_URL=${ICS_URL}
       - WORK_START=${WORK_START:-10:00}
@@ -24,7 +11,3 @@ services:
       - BUFFER_MINUTES=${BUFFER_MINUTES:-10}
       - PORT=${PORT:-3000}
     restart: unless-stopped
-
-volumes:
-  caddy_data:
-  caddy_config:
