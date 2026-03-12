@@ -1,7 +1,7 @@
 # calman
 
 [![GitHub release](https://img.shields.io/github/v/release/jamesbmarshall/calman?include_prereleases&style=flat-square)](https://github.com/jamesbmarshall/calman/releases)
-[![License: ISC](https://img.shields.io/badge/license-ISC-blue?style=flat-square)](https://opensource.org/licenses/ISC)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22-brightgreen?style=flat-square&logo=node.js)](https://nodejs.org)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
 
