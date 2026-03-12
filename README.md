@@ -116,14 +116,13 @@ That's it. Visit `https://cal.yourdomain.com` — it should be live.
 ### Verifying it's working
 
 ```bash
-# Check both containers are running
+# Check the container is running
 docker compose ps
 
 # Check calman's logs
 docker compose logs calman
 
-# Check Caddy's logs (useful if HTTPS isn't working)
-docker compose logs caddy
+# If HTTPS isn't working, check your Pangolin dashboard/logs (Pangolin runs externally)
 
 # Hit the health check endpoint
 curl http://localhost:3000/health
