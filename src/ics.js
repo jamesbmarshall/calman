@@ -5,7 +5,13 @@ const ical = require("node-ical");
  * Each block is { start: Date, end: Date, summary: string }.
  */
 async function fetchBusyBlocks(icsUrl, days = 30) {
-  const data = await ical.async.fromURL(icsUrl);
+  let data;
+  try {
+    data = await ical.async.fromURL(icsUrl);
+  } catch (err) {
+    throw new Error(`Failed to fetch or parse ICS feed: ${err.message}`);
+  }
+
   const now = new Date();
   const horizon = new Date(now);
   horizon.setDate(horizon.getDate() + days);
@@ -27,6 +33,8 @@ async function fetchBusyBlocks(icsUrl, days = 30) {
 
     // Handle recurring events
     if (event.rrule) {
+      if (!event.start || !event.end) continue;
+
       const occurrences = event.rrule.between(now, horizon, true);
       const duration = event.end - event.start;
 
@@ -34,11 +42,17 @@ async function fetchBusyBlocks(icsUrl, days = 30) {
         const start = new Date(occ);
         const end = new Date(start.getTime() + duration);
 
-        // Check for EXDATE exclusions
+        // Check for EXDATE exclusions — compare as UTC ISO strings to avoid
+        // timezone offset mismatches between occurrence and exdate values.
         if (event.exdate) {
-          const excluded = Object.values(event.exdate).some(
-            (ex) => new Date(ex).getTime() === start.getTime()
-          );
+          const occUtc = start.toISOString();
+          const excluded = Object.values(event.exdate).some((ex) => {
+            try {
+              return new Date(ex).toISOString() === occUtc;
+            } catch {
+              return false;
+            }
+          });
           if (excluded) continue;
         }
 
@@ -48,13 +62,20 @@ async function fetchBusyBlocks(icsUrl, days = 30) {
           summary: event.summary || "Busy",
         });
       }
+
+      // Recurring events are fully handled above; skip the single-event path.
+      continue;
     }
 
-    // Handle single (or each occurrence already expanded by the provider)
+    // Handle single events
+    if (!event.start || !event.end) continue;
+
     const start = new Date(event.start);
     const end = new Date(event.end);
 
-    if (!event.rrule && end > now && start < horizon) {
+    if (isNaN(start) || isNaN(end)) continue;
+
+    if (end > now && start < horizon) {
       blocks.push({ start, end, summary: event.summary || "Busy" });
     }
   }
